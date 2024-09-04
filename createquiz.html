@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Quiz with QuizLab</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <style>
+/* Global Styles */
+body {
+    font-family: "Montserrat", sans-serif;
+    background: linear-gradient(135deg, #8a2be2, #e1007d);
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+    font-optical-sizing: auto;
+    font-weight: auto;
+    font-style: normal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    max-width: 800px;
+    width: 100%;
+    animation: slideIn 1.5s ease-in-out;
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #f8f8f8;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    transition: background 0.3s, border 0.3s;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid #fff;
+    box-shadow: none;
+}
+
+/* Button Styles */
+.btn {
+    font-size: 16px;
+    margin: 5px;
+    border-radius: 50px;
+    padding: 10px 20px;
+    transition: background-color 0.3s, transform 0.3s;
+    border: none; /* Simplify the buttons by removing borders */
+}
+
+.btn-primary {
+    background-color: #8a2be2;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #7a23c1;
+    transform: scale(1.05);
+}
+
+.btn-danger {
+    background-color: #e1007d;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #c1006c;
+    transform: scale(1.05);
+}
+
+.btn-success {
+    background-color: #34c759;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background-color: #2aa34b;
+    transform: scale(1.05);
+}
+
+.btn-secondary {
+    background-color: #ffcc00;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #e6b800;
+    transform: scale(1.05);
+}
+
+/* Input Checkbox Styles */
+.option-group input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+/* Keyframes for animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Placeholder Text Color */
+.form-control::placeholder {
+    color: #fff; 
+}
+
+/* Content Text Color */
+.form-control::content {
+    color: #fff;
+}
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Create Quiz</h1>
+    <form id="quiz-form" action="/savequizset" method="POST">
+      <div class="form-group">
+        <label for="title">Quiz Title:</label>
+        <input type="text" class="form-control"  placeholder="Enter the Title of this Quiz set......"  id="title" name="title" required>
+      </div>
+      <div class="form-group">
+        <label for="marks">Marks per Question:</label>
+        <input type="number" placeholder = "Enter the Marks"class="form-control d-inline-block" style="width:auto;" id="marks" name="marks" required>
+      </div>
+
+      <div id="questions-container">
+        <div class="question-container mb-4">
+          <h2>Question 1</h2>
+          <div class="form-group">
+            <label for="question-text-0">Question Text:</label>
+            <input type="text" class="form-control" id="question-text-0" name="question-text-0" required>
+          </div>
+          <div class="options-container">
+            <div class="option-group d-flex align-items-center mb-2">
+              <input type="checkbox" id="option1-0" name="option1-0">
+              <input type="text" class="form-control ml-2" id="option-text-0-0" name="option-text-0-0" placeholder="Option 1" required>
+            </div>
+            <div class="option-group d-flex align-items-center mb-2">
+              <input type="checkbox" id="option2-0" name="option2-0">
+              <input type="text" class="form-control ml-2" id="option-text-0-1" name="option-text-0-1" placeholder="Option 2" required>
+            </div>
+            <div class="option-group d-flex align-items-center mb-2">
+              <input type="checkbox" id="option3-0" name="option3-0">
+              <input type="text" class="form-control ml-2" id="option-text-0-2" name="option-text-0-2" placeholder="Option 3" required>
+            </div>
+            <div class="option-group d-flex align-items-center mb-2">
+              <input type="checkbox" id="option4-0" name="option4-0">
+              <input type="text" class="form-control ml-2" id="option-text-0-3" name="option-text-0-3" placeholder="Option 4" required>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" id="question-count" name="question-count" value="1">
+
+      <div class="button-container text-center">
+        <button type="button" class="btn btn-primary" onclick="addQuestion()">Add Another Question</button>
+        <button type="button" class="btn btn-primary" onclick="deleteLastQuestion()">Delete Last Question</button>
+        <button type="button" class="btn btn-primary" onclick="goToAnotherRoute()">Start the Saved Quiz</button>
+        <button type="submit" class="btn btn-primary">Save Quiz Set</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+
+  <script>
+    let questionCount = 1;
+
+    function addQuestion() {
+      questionCount++;
+      const questionsContainer = document.getElementById('questions-container');
+      const questionHTML = `
+        <div class="question-container mb-4">
+          <h2>Question ${questionCount}</h2>
+          <div class="form-group">
+            <label for="question-text-${questionCount - 1}">Question Text:</label>
+            <input type="text" class="form-control" id="question-text-${questionCount - 1}" name="question-text-${questionCount - 1}" required>
+          </div>
+          <div class="options-container">
+            <div class="option-group d-flex align-items-center mb-2">
+              <input type="checkbox" id="option1-${questionCount - 1}" name="option1-${questionCount - 1}">
+              <input type="text" class="form-control ml-2" id="option-text-${questionCount - 1}-0" name="option-text-${questionCount - 1}-0" placeholder="Option 1" required>
+            </div>
+            <div class="option-group d-flex align-items-center mb-2">
+              <input type="checkbox" id="option2-${questionCount - 1}" name="option2-${questionCount - 1}">
+              <input type="text" class="form-control ml-2" id="option-text-${questionCount - 1}-1" name="option-text-${questionCount - 1}-1" placeholder="Option 2" required>
+            </div>
+            <div class="option-group d-flex align-items-center mb-2">
+              <input type="checkbox" id="option3-${questionCount - 1}" name="option3-${questionCount - 1}">
+              <input type="text" class="form-control ml-2" id="option-text-${questionCount - 1}-2" name="option-text-${questionCount - 1}-2" placeholder="Option 3" required>
+            </div>
+            <div class="option-group d-flex align-items-center mb-2">
+              <input type="checkbox" id="option4-${questionCount - 1}" name="option4-${questionCount - 1}">
+              <input type="text" class="form-control ml-2" id="option-text-${questionCount - 1}-3" name="option-text-${questionCount - 1}-3" placeholder="Option 4" required>
+            </div>
+          </div>
+        </div>
+      `;
+      questionsContainer.insertAdjacentHTML('beforeend', questionHTML);
+      document.getElementById('question-count').value = questionCount;
+    }
+
+    function deleteLastQuestion() {
+      if (questionCount > 1) {
+        const questionsContainer = document.getElementById('questions-container');
+        questionsContainer.removeChild(questionsContainer.lastElementChild);
+        questionCount--;
+        document.getElementById('question-count').value = questionCount;
+      }
+    }
+
+    function goToAnotherRoute() {
+      window.location.href = '/landing/createquiz/answerquiz'; // Change this to your desired route
+    }
+    
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

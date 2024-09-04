@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Application</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #8a2be2, #e1007d);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+    
+        .quiz-container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            height: 80%;
+            max-width: 800px; /* Optional: to set a maximum width */
+            max-height: 600px; /* Optional: to set a maximum height */
+            text-align: center;
+            animation: slideIn 1.5s ease-in-out;
+            overflow: auto; /* Ensures content can scroll if it overflows */
+        }
+    
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+    
+        #question-container {
+            margin-bottom: 20px;
+        }
+    
+        .option {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin: 10px 0;
+            text-align: left;
+            border: 1px solid #ffffff33; /* Light border to separate options */
+            background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent background */
+        }
+    
+        .option:hover {
+            background-color: #8a2be2;
+            color: #fff;
+        }
+    
+        .option.selected {
+            background-color: #007bff;
+            color: #fff;
+        }
+    
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+    
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #8a2be2;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+    
+        button:hover {
+            background-color: #7a23c1;
+            transform: scale(1.05);
+        }
+    
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+    
+        #no-quiz-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    
+        #create-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #e1007d;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 50px;
+            margin-top: 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+    
+        #create-button:hover {
+            background-color: #c1006c;
+            transform: scale(1.05);
+        }
+    
+        @keyframes slideIn {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Quiz Application</h1>
+        <div id="question-container">
+            <!-- Question and options will be dynamically inserted here -->
+        </div>
+        <div class="button-container">
+            <button id="prev-button" disabled>Previous</button>
+            <button id="submit-button">Submit</button>
+            <button id="next-button">Next</button>
+        </div>
+        <div id="no-quiz-container" style="display: none;">
+            <p>Nothing to Ask, create a question set?</p>
+            <button id="create-button">Create Question Set</button>
+        </div>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentQuestionIndex = 0;
+            let score = 0;
+            let quizData;
+
+            fetch('/api/quizzes')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        quizData = data[0];
+                        displayQuestion(quizData.questions[currentQuestionIndex]);
+
+                        document.getElementById('next-button').addEventListener('click', () => {
+                            checkAnswerAndMoveNext();
+                        });
+
+                        document.getElementById('prev-button').addEventListener('click', () => {
+                            if (currentQuestionIndex > 0) {
+                                currentQuestionIndex--;
+                                displayQuestion(quizData.questions[currentQuestionIndex]);
+                            }
+                        });
+
+                        document.getElementById('submit-button').addEventListener('click', () => {
+                            const userConfirmed = confirm('Are you sure you want to submit?');
+                            if (userConfirmed) {
+                                submitQuiz();
+                            }
+                        });
+                    } else {
+                        displayNoQuizMessage();
+                    }
+                })
+                .catch(error => console.error('Error fetching quiz data:', error));
+
+            function displayQuestion(question) {
+                const questionContainer = document.getElementById('question-container');
+                questionContainer.innerHTML = '';
+
+                const questionText = document.createElement('p');
+                questionText.textContent = question.questionText;
+                questionContainer.appendChild(questionText);
+
+                question.options.forEach((option, index) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.classList.add('option');
+                    optionElement.dataset.value = index;
+                    optionElement.innerHTML = option.text;
+                    questionContainer.appendChild(optionElement);
+                });
+
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        document.querySelectorAll('.option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        this.classList.add('selected');
+                    });
+                });
+
+                document.getElementById('prev-button').disabled = currentQuestionIndex === 0;
+                document.getElementById('next-button').disabled = currentQuestionIndex === quizData.questions.length - 1;
+            }
+
+            function checkAnswerAndMoveNext() {
+                const selectedOption = document.querySelector('.option.selected');
+                
+                if (selectedOption) {
+                    const answerIndex = parseInt(selectedOption.dataset.value);
+                    const currentQuestion = quizData.questions[currentQuestionIndex];
+
+                    if (currentQuestion.options[answerIndex].isCorrect) {
+                        score += currentQuestion.marks;
+                    }
+
+                    if (currentQuestionIndex < quizData.questions.length - 1) {
+                        currentQuestionIndex++;
+                        displayQuestion(quizData.questions[currentQuestionIndex]);
+                    } else {
+                        displayResult();
+                    }
+                } else {
+                    alert('Please select an option before moving to the next question.');
+                }
+            }
+
+            function submitQuiz() {
+                const selectedOption = document.querySelector('.option.selected');
+                
+                if (selectedOption) {
+                    const answerIndex = parseInt(selectedOption.dataset.value);
+                    const currentQuestion = quizData.questions[currentQuestionIndex];
+
+                    if (currentQuestion.options[answerIndex].isCorrect) {
+                        score += currentQuestion.marks;
+                    }
+                }
+
+                alert(`You have submitted the quiz. Your score is: ${score}`);
+                displayResult();
+
+                // Send a request to delete the quiz from the database
+                fetch(`/api/quizzes/${quizData._id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Quiz deleted successfully');
+                    } else {
+                        console.error('Failed to delete the quiz');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            function displayResult() {
+                const resultContainer = document.getElementById('result');
+                resultContainer.textContent = `Your final score is: ${score} marks`;
+                document.getElementById('question-container').style.display = 'none';
+                document.getElementById('next-button').style.display = 'none';
+                document.getElementById('prev-button').style.display = 'none';
+                document.getElementById('submit-button').style.display = 'none';
+            }
+
+            function displayNoQuizMessage() {
+                document.getElementById('question-container').style.display = 'none';
+                document.querySelector('.button-container').style.display = 'none';
+                const noQuizContainer = document.getElementById('no-quiz-container');
+                noQuizContainer.style.display = 'block';
+
+                document.getElementById('create-button').addEventListener('click', () => {
+                    window.location.href = '/landing/createquiz ';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

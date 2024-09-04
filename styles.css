@@ -1,0 +1,197 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    animation: fadeInBody 1s ease-out;
+    background: #f9f9f9; /* Light background for contrast */
+  }
+  
+  .hero-section {
+    height: 100vh;
+    background: url('https://wallpapers.com/images/featured/4k-gaming-background-bud9k5ffqi3r2ds9.jpg') no-repeat center center/cover;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    text-align: center;
+    animation: fadeInHero 1.5s ease-out;
+  }
+  
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Slightly lighter for contrast */
+    z-index: 1;
+  }
+  
+  .hero-section .container {
+    z-index: 2;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
+  }
+  
+  header {
+    background: linear-gradient(135deg, #e1007d, #8a2be2); /* Pinkish-purple gradient */
+    padding: 1rem 0;
+    animation: fadeInHeader 1.5s ease-out;
+    color: #ffffff;
+  }
+  
+  header .logo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    animation: fadeInText 1s ease-out;
+  }
+  
+  header .nav-link {
+    font-weight: 500;
+    margin: 0 15px;
+    color: #ffffff;
+    transition: color 0.3s ease-in-out, transform 0.3s ease;
+    animation: fadeInText 1s ease-out;
+  }
+  
+  header .nav-link:hover {
+    color: #ffeb3b; /* Highlight color on hover */
+    transform: scale(1.1);
+  }
+  
+  form .btn {
+    background-color: #e1007d; /* Pinkish button */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease;
+    animation: fadeInButton 1s ease-out;
+  }
+  
+  form .btn:hover {
+    background-color: #d81b60;
+    transform: translateY(-3px) scale(1.05);
+  }
+  
+  .footer {
+    background: linear-gradient(135deg, #8a2be2, #e1007d); /* Pinkish-purple gradient */
+    color: #ffffff;
+    text-align: center;
+    padding: 2rem 0;
+    animation: fadeInFooter 1.5s ease-out;
+  }
+  
+  .footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .footer-text {
+    margin: 0;
+    font-size: 1rem;
+    animation: fadeInText 1s ease-out;
+  }
+  
+  .social-icons {
+    margin-top: 1rem;
+  }
+  
+  .social-icon {
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin: 0 15px;
+    transition: color 0.3s ease-in-out, transform 0.3s ease;
+    display: inline-block;
+    animation: fadeInIcons 1s ease-out;
+  }
+  
+  .social-icon:hover {
+    color: #ffeb3b; /* Highlight color on hover */
+    transform: scale(1.3) rotate(360deg);
+  }
+  
+  
+  @keyframes fadeInBody {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInHero {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInHeader {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInButton {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInFooter {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInText {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInIcons {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+  }
+  
